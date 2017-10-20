@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"os"
 	"log"
+	"github.com/mageddo/go-logging/native"
 )
 
 func TestDebug(t *testing.T){
@@ -104,7 +105,7 @@ func TestErrorf(t *testing.T){
 }
 
 func NewNoFlagInstance(buff *bytes.Buffer) Log {
-	return New(NewGologPrinter(buff, "", 0));
+	return New(native.NewGologPrinter(buff, "", 0));
 }
 
 //
@@ -135,7 +136,6 @@ func TestStaticDebugf(t *testing.T){
 }
 
 func TestStaticInfo(t *testing.T){
-
 	buff := new(bytes.Buffer)
 	logger := GetStaticLoggerAndDisableTimeLogging(buff)
 	logger.Info("name=", "elvis");
@@ -208,14 +208,14 @@ func TestStaticErrorf(t *testing.T){
 
 func GetStaticLoggerAndDisableTimeLogging(buff *bytes.Buffer) Log {
 	logger := GetLog()
-	printer := logger.Printer().(*gologPrinter)
+	printer := logger.Printer().(*native.Printer)
 	printer.SetFlags(0)
 	printer.SetOutput(buff)
 	return logger
 }
 
 func ExampleDebugf() {
-	printer := GetLog().Printer().(*gologPrinter)
+	printer := GetLog().Printer().(*native.Printer)
 	printer.SetOutput(os.Stdout)
 	printer.SetFlags(0)
 

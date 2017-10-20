@@ -5,48 +5,48 @@ import (
 	"github.com/mageddo/go-logging/pkg/trace"
 )
 
-type nativeLogger struct {
+type defaultLogger struct {
 	writer Printer
 }
 
-func New(p Printer) *nativeLogger {
-	return &nativeLogger{p}
+func New(p Printer) *defaultLogger {
+	return &defaultLogger{p}
 }
 
-func (l *nativeLogger) Debug(args ...interface{}) {
+func (l *defaultLogger) Debug(args ...interface{}) {
 	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "DEBUG")).String()}, args...)
 	l.Printer().Println(args...)
 }
 
-func (l *nativeLogger) Debugf(format string, args ...interface{}) {
+func (l *defaultLogger) Debugf(format string, args ...interface{}) {
 	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "DEBUG")), format).String(), args...)
 }
 
-func (l *nativeLogger) Info(args ...interface{}) {
+func (l *defaultLogger) Info(args ...interface{}) {
 	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "INFO")).String()}, args...)
 	l.Printer().Println(args...)
 }
-func (l *nativeLogger) Infof(format string, args ...interface{}) {
+func (l *defaultLogger) Infof(format string, args ...interface{}) {
 	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "INFO")), format).String(), args...)
 }
 
-func (l *nativeLogger) Warning(args ...interface{}) {
+func (l *defaultLogger) Warning(args ...interface{}) {
 	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "WARNING")).String()}, args...)
 	l.Printer().Println(args...)
 }
-func (l *nativeLogger) Warningf(format string, args ...interface{}) {
+func (l *defaultLogger) Warningf(format string, args ...interface{}) {
 	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "WARNING")), format).String(), args...)
 }
 
-func (l *nativeLogger) Error(args ...interface{}) {
+func (l *defaultLogger) Error(args ...interface{}) {
 	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "ERROR")).String()}, args...)
 	l.Printer().Println(args...)
 }
-func (l *nativeLogger) Errorf(format string, args ...interface{}) {
+func (l *defaultLogger) Errorf(format string, args ...interface{}) {
 	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "ERROR")), format).String(), args...)
 }
 
-func (l *nativeLogger) Printer() Printer {
+func (l *defaultLogger) Printer() Printer {
 	return l.writer
 }
 

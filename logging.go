@@ -7,6 +7,7 @@ import (
 	"os"
 	"log"
 	"io"
+	"github.com/mageddo/go-logging/native"
 )
 
 type Printer interface {
@@ -36,7 +37,7 @@ type Log interface {
 
 }
 
-var l Log = New(NewGologPrinter(os.Stdout, "", log.LstdFlags))
+var l Log = New(native.NewGologPrinter(os.Stdout, "", log.LstdFlags))
 func Debug(args ...interface{}) {
 	l.Debug(args)
 }
