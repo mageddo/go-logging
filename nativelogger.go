@@ -50,7 +50,7 @@ func (l *defaultLogger) Printer() Printer {
 	return l.writer
 }
 
-const level = 2
+const level = 4
 
 // add method caller name to message
 func withCallerMethod(buff *bytes.Buffer) *bytes.Buffer {
