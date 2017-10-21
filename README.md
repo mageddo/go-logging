@@ -10,3 +10,7 @@ logging.Infof("hey %s", "Mark")
 logging.Warnf("hey %s", "Mark")
 logging.Errorf("hey %s", "Mark")
 ```
+
+Testing it
+
+    docker-compose up --abort-on-container-exit ci-build-test
