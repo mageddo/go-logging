@@ -2,7 +2,7 @@ version: '2'
 services:
   go-logging:
     container_name: go-logging
-    image: golang:1.9
+    image: golang:1.7.3
     volumes:
       - $PWD:/go/src/github.com/mageddo/go-logging
     working_dir: /go/src/github.com/mageddo/go-logging
