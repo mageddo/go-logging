@@ -7,3 +7,7 @@ services:
       - $PWD:/go/src/github.com/mageddo/go-logging
     working_dir: /go/src/github.com/mageddo/go-logging
     command: tail -f /dev/null
+  ci-build-test:
+    extends: go-logging
+    container_name: ci-build-test
+    command: go test -v -run . -bench . github.com/mageddo/go-logging/...
