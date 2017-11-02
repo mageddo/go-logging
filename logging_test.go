@@ -3,9 +3,9 @@ package logging
 import (
 	"testing"
 	"bytes"
-	"os"
 	"log"
 	"github.com/mageddo/go-logging/native"
+	"os"
 )
 
 func TestDebug(t *testing.T){
@@ -114,8 +114,8 @@ func NewNoFlagInstance(buff *bytes.Buffer) Log {
 func TestStaticDebug(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Debug("name=", "elvis");
+	setupStaticLoggerForTests(buff)
+	Debug("name=", "elvis");
 
 	expected := "DEBUG m=TestStaticDebug  name= elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -126,8 +126,8 @@ func TestStaticDebug(t *testing.T){
 func TestStaticDebugf(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Debugf("name=%v", "elvis");
+	setupStaticLoggerForTests(buff)
+	Debugf("name=%v", "elvis");
 
 	expected := "DEBUG m=TestStaticDebugf name=elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -137,8 +137,8 @@ func TestStaticDebugf(t *testing.T){
 
 func TestStaticInfo(t *testing.T){
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Info("name=", "elvis");
+	setupStaticLoggerForTests(buff)
+	Info("name=", "elvis");
 
 	expected := "INFO m=TestStaticInfo  name= elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -149,8 +149,8 @@ func TestStaticInfo(t *testing.T){
 func TestStaticInfof(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Infof("name=%v", "elvis");
+	setupStaticLoggerForTests(buff)
+	Infof("name=%v", "elvis");
 
 	expected := "INFO m=TestStaticInfof name=elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -161,8 +161,8 @@ func TestStaticInfof(t *testing.T){
 func TestStaticWarn(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Warning("name=", "elvis");
+	setupStaticLoggerForTests(buff)
+	Warning("name=", "elvis");
 
 	expected := "WARNING m=TestStaticWarn  name= elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -173,8 +173,8 @@ func TestStaticWarn(t *testing.T){
 func TestStaticWarnf(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Warningf("name=%v", "elvis");
+	setupStaticLoggerForTests(buff)
+	Warningf("name=%v", "elvis");
 
 	expected := "WARNING m=TestStaticWarnf name=elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -185,8 +185,8 @@ func TestStaticWarnf(t *testing.T){
 func TestStaticError(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Error("name=", "elvis");
+	setupStaticLoggerForTests(buff)
+	Error("name=", "elvis");
 
 	expected := "ERROR m=TestStaticError  name= elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -197,8 +197,8 @@ func TestStaticError(t *testing.T){
 func TestStaticErrorf(t *testing.T){
 
 	buff := new(bytes.Buffer)
-	logger := GetStaticLoggerAndDisableTimeLogging(buff)
-	logger.Errorf("name=%v", "elvis");
+	setupStaticLoggerForTests(buff)
+	Errorf("name=%v", "elvis");
 
 	expected := "ERROR m=TestStaticErrorf name=elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -206,12 +206,11 @@ func TestStaticErrorf(t *testing.T){
 	}
 }
 
-func GetStaticLoggerAndDisableTimeLogging(buff *bytes.Buffer) Log {
+func setupStaticLoggerForTests(buff *bytes.Buffer)  {
 	logger := GetLog()
 	printer := logger.Printer().(*native.Printer)
 	printer.SetFlags(0)
 	printer.SetOutput(buff)
-	return logger
 }
 
 func ExampleDebugf() {
@@ -222,7 +221,7 @@ func ExampleDebugf() {
 	Debugf("name=%q, age=%d", "John\nZucky", 21)
 
 	// Output:
-	// DEBUG m=Debugf name="John\nZucky", age=21
+	// DEBUG m=ExampleDebugf name="John\nZucky", age=21
 }
 
 func BenchmarkDebugf(b *testing.B) {

@@ -7,53 +7,55 @@ import (
 
 type defaultLogger struct {
 	writer Printer
+	level int
 }
 
-func New(p Printer) *defaultLogger {
-	return &defaultLogger{p}
+func New(p Printer, level ...int) *defaultLogger {
+	if(len(level) > 0){
+		return &defaultLogger{p, level[0]}
+	}
+	return &defaultLogger{p, 2}
 }
 
 func (l *defaultLogger) Debug(args ...interface{}) {
-	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "DEBUG")).String()}, args...)
+	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "DEBUG"), l.level).String()}, args...)
 	l.Printer().Println(args...)
 }
 
 func (l *defaultLogger) Debugf(format string, args ...interface{}) {
-	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "DEBUG")), format).String(), args...)
+	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "DEBUG"), l.level), format).String(), args...)
 }
 
 func (l *defaultLogger) Info(args ...interface{}) {
-	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "INFO")).String()}, args...)
+	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "INFO"), l.level).String()}, args...)
 	l.Printer().Println(args...)
 }
 func (l *defaultLogger) Infof(format string, args ...interface{}) {
-	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "INFO")), format).String(), args...)
+	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "INFO"), l.level), format).String(), args...)
 }
 
 func (l *defaultLogger) Warning(args ...interface{}) {
-	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "WARNING")).String()}, args...)
+	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "WARNING"), l.level).String()}, args...)
 	l.Printer().Println(args...)
 }
 func (l *defaultLogger) Warningf(format string, args ...interface{}) {
-	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "WARNING")), format).String(), args...)
+	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "WARNING"), l.level), format).String(), args...)
 }
 
 func (l *defaultLogger) Error(args ...interface{}) {
-	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "ERROR")).String()}, args...)
+	args = append([]interface{}{withCallerMethod(withLevel(new(bytes.Buffer), "ERROR"), l.level).String()}, args...)
 	l.Printer().Println(args...)
 }
 func (l *defaultLogger) Errorf(format string, args ...interface{}) {
-	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "ERROR")), format).String(), args...)
+	l.Printer().Printf(withFormat(withCallerMethod(withLevel(new(bytes.Buffer), "ERROR"), l.level), format).String(), args...)
 }
 
 func (l *defaultLogger) Printer() Printer {
 	return l.writer
 }
 
-const level = 2
-
 // add method caller name to message
-func withCallerMethod(buff *bytes.Buffer) *bytes.Buffer {
+func withCallerMethod(buff *bytes.Buffer, level int) *bytes.Buffer {
 	buff.WriteString("m=")
 	buff.WriteString(trace.GetCallerFunctionName(level))
 	buff.WriteString(" ")
