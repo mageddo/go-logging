@@ -206,6 +206,20 @@ func TestStaticErrorf(t *testing.T){
 	}
 }
 
+func TestStaticErrorfWithCallback(t *testing.T){
+
+	buff := new(bytes.Buffer)
+	setupStaticLoggerForTests(buff)
+	Errorf("name=%v", "elvis");
+
+	func(){
+		expected := "ERROR m=TestStaticErrorfWithCallback name=elvis\n"
+		if actual := buff.String(); actual != expected {
+			t.Errorf("log format not expected, expected='%q', actual='%q'", expected, actual)
+		}
+	}()
+}
+
 func setupStaticLoggerForTests(buff *bytes.Buffer)  {
 	logger := GetLog()
 	printer := logger.Printer().(*native.Printer)
