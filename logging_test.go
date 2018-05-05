@@ -6,6 +6,9 @@ import (
 	"log"
 	"github.com/mageddo/go-logging/native"
 	"os"
+	"errors"
+	"bufio"
+	"strings"
 )
 
 func TestDebug(t *testing.T){
@@ -84,7 +87,7 @@ func TestError(t *testing.T){
 
 	buff := new(bytes.Buffer)
 	logger := NewNoFlagInstance(buff)
-	logger.Error("name=", "elvis");
+	logger.Error("name=", "elvis")
 
 	expected := "ERROR m=TestError  name= elvis\n"
 	if actual := buff.String(); actual != expected {
@@ -96,11 +99,47 @@ func TestErrorf(t *testing.T){
 
 	buff := new(bytes.Buffer)
 	logger := NewNoFlagInstance(buff)
-	logger.Errorf("name=%v", "elvis");
+	logger.Errorf("name=%v", "elvis")
 
 	expected := "ERROR m=TestErrorf name=elvis\n"
 	if actual := buff.String(); actual != expected {
 		t.Errorf("log format not expected, full=%s, actual=%s", expected, actual)
+	}
+}
+
+func TestErrorShouldLogStackTrace(t *testing.T){
+
+	buff := new(bytes.Buffer)
+	logger := NewNoFlagInstance(buff)
+	logger.Error("name=", "elvis", errors.New("an error!"))
+
+	expected := "ERROR m=TestErrorShouldLogStackTrace  name= elvis an error!"
+	firstLine, _, _ := bufio.NewReader(bytes.NewReader(buff.Bytes())).ReadLine()
+
+	if actual := string(firstLine); actual != expected {
+		t.Errorf("log format not expected, full=%s, actual=%s", expected, actual)
+	}
+	if strings.Index(buff.String(), "created by testing.(") == -1 {
+		t.Error("Output mus have stacktrace! " + buff.String())
+	}
+}
+
+func TestErrorfShouldLogStackTrace(t *testing.T){
+
+	buff := new(bytes.Buffer)
+	logger := NewNoFlagInstance(buff)
+	logger.Errorf("name=%s", "elvis", errors.New("an error!"))
+
+	expected := "ERROR m=TestErrorfShouldLogStackTrace name=elvis an error!"
+	firstLine, _, _ := bufio.NewReader(bytes.NewReader(buff.Bytes())).ReadLine()
+
+	if actual := string(firstLine); actual != expected {
+		log.Println(buff)
+		t.Errorf("log format not expected, full=%s, actual=%s", expected, actual)
+	}
+	if strings.Index(buff.String(), "created by testing.(") == -1 {
+		log.Println(buff)
+		t.Error("Output must have stacktrace! " + buff.String())
 	}
 }
 
