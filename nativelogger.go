@@ -5,6 +5,7 @@ import (
 	"github.com/mageddo/go-logging/pkg/trace"
 	"fmt"
 	"runtime/debug"
+	"strconv"
 )
 
 type defaultLogger struct {
@@ -64,11 +65,10 @@ func transformErrorInStackTrace(args []interface{}, buf *bytes.Buffer) []interfa
 	if size > 0 {
 		last, ok := args[size - 1].(error)
 		if ok {
-			stack := fmt.Sprintf("%s\n%s", last.Error(), debug.Stack())
+			stack := fmt.Sprintf("\n%s\n%s", last.Error(), debug.Stack())
 			if buf == nil {
 				args[size - 1] = stack
 			} else {
-				buf.WriteString(" ")
 				buf.WriteString(stack)
 				return args[:size-1]
 			}
@@ -79,8 +79,15 @@ func transformErrorInStackTrace(args []interface{}, buf *bytes.Buffer) []interfa
 
 // add method caller name to message
 func withCallerMethod(buff *bytes.Buffer, level int) *bytes.Buffer {
-	buff.WriteString("m=")
-	buff.WriteString(trace.GetCallerFunctionName(level))
+	s := trace.GetCallerFunction(level)
+	buff.WriteString("f=")
+	buff.WriteString(s.FileName)
+	buff.WriteString(":")
+	buff.WriteString(strconv.Itoa(s.Line))
+	buff.WriteString(" pkg=")
+	buff.WriteString(s.PackageName)
+	buff.WriteString(" m=")
+	buff.WriteString(s.Funcname)
 	buff.WriteString(" ")
 	return buff
 }
@@ -89,7 +96,7 @@ func withCallerMethod(buff *bytes.Buffer, level int) *bytes.Buffer {
 func withLevel(buff *bytes.Buffer, lvl string) *bytes.Buffer {
 	buff.WriteString(lvl)
 	buff.WriteString(" ")
-	return buff;
+	return buff
 }
 
 // adding format string to message
