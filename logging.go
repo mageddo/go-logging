@@ -10,6 +10,7 @@ import (
 	"github.com/mageddo/go-logging/native"
 )
 
+// in accord to https://tools.ietf.org/html/rfc5424
 const (
 	ERROR = 3
 	WARNING = 4
