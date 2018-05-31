@@ -10,6 +10,14 @@ import (
 	"github.com/mageddo/go-logging/native"
 )
 
+const (
+	ERROR = 3
+	WARNING = 4
+	NOTICE = 5
+	INFO = 6
+	DEBUG = 7
+)
+
 type Printer interface {
 	Printf(format string, args ...interface{})
 	Println(args ...interface{})
@@ -35,6 +43,9 @@ type Log interface {
 
 	Printer() Printer
 
+	// specify log level
+	SetLevel(level int)
+	GetLevel() int
 }
 
 var l Log = New(native.NewGologPrinter(os.Stdout, "", log.LstdFlags), 3)
@@ -86,4 +97,12 @@ func SetLog(logger Log){
 //
 func GetLog() Log {
 	return l
+}
+
+func SetLevel(level int){
+	l.SetLevel(level)
+}
+
+func GetLevel() int {
+	return l.GetLevel()
 }

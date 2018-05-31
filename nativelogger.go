@@ -6,18 +6,20 @@ import (
 	"fmt"
 	"runtime/debug"
 	"strconv"
+	"database/sql"
 )
 
 type defaultLogger struct {
 	writer Printer
 	level int
+	logLevel int
 }
 
 func New(p Printer, level ...int) *defaultLogger {
 	if len(level) > 0 {
-		return &defaultLogger{p, level[0]}
+		return &defaultLogger{p, level[0], DEBUG}
 	}
-	return &defaultLogger{p, 2}
+	return &defaultLogger{p, 2, DEBUG}
 }
 
 func (l *defaultLogger) Debug(args ...interface{}) {
@@ -58,6 +60,14 @@ func (l *defaultLogger) Errorf(format string, args ...interface{}) {
 
 func (l *defaultLogger) Printer() Printer {
 	return l.writer
+}
+
+func (l *defaultLogger) SetLevel(level int) {
+	l.logLevel = level
+}
+
+func (l *defaultLogger) GetLevel() int {
+	return l.logLevel
 }
 
 func transformErrorInStackTrace(args []interface{}, buf *bytes.Buffer) []interface{} {
