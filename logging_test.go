@@ -323,3 +323,21 @@ func BenchmarkDebugf(b *testing.B) {
 	}
 }
 
+
+func TestLogLevelActiveInactive(t *testing.T){
+
+	buff := new(bytes.Buffer)
+	logger := NewNoFlagInstance(buff)
+	SetLog(logger)
+
+	logger.SetLevel(WARNING)
+	Debug("x")
+	Debugf("x")
+	Info("name=", "elvis")
+	Infof("name=%s", "elvis")
+
+	expected := ""
+	if actual := buff.String(); actual != expected {
+		t.Errorf("log format not expected, expected=%s, actual=%s", expected, actual)
+	}
+}

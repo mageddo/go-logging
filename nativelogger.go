@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"runtime/debug"
 	"strconv"
-	"database/sql"
 )
 
 type defaultLogger struct {
