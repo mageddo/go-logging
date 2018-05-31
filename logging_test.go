@@ -144,7 +144,7 @@ func TestErrorfShouldLogStackTrace(t *testing.T){
 }
 
 func NewNoFlagInstance(buff *bytes.Buffer) Log {
-	return New(native.NewGologPrinter(buff, "", 0));
+	return New(native.NewGologPrinter(buff, "", 0))
 }
 
 //
@@ -326,8 +326,9 @@ func BenchmarkDebugf(b *testing.B) {
 
 func TestLogLevelActiveInactive(t *testing.T){
 
+	original := GetLog()
 	buff := new(bytes.Buffer)
-	logger := NewNoFlagInstance(buff)
+	logger := New(native.NewGologPrinter(buff, "", 0), 3)
 	SetLog(logger)
 
 	logger.SetLevel(WARNING)
@@ -340,4 +341,7 @@ func TestLogLevelActiveInactive(t *testing.T){
 	if actual := buff.String(); actual != expected {
 		t.Errorf("log format not expected, expected=%s, actual=%s", expected, actual)
 	}
+	// resetting to default
+	logger.SetLevel(DEBUG)
+	SetLog(original)
 }
