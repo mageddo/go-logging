@@ -114,7 +114,7 @@ func TestErrorShouldLogStackTrace(t *testing.T){
 	logger := NewNoFlagInstance(buff)
 	logger.Error("name=", "elvis", errors.New("an error!"))
 
-	expected := "ERROR f=logging_test.go:115 pkg=github.com/mageddo/go-logging m=TestErrorShouldLogStackTrace  name= elvis "
+	expected := "ERROR f=logging_test.go:117 pkg=github.com/mageddo/go-logging m=TestErrorShouldLogStackTrace  name= elvis "
 	firstLine, _, _ := bufio.NewReader(bytes.NewReader(buff.Bytes())).ReadLine()
 
 	if actual := string(firstLine); actual != expected {
@@ -337,10 +337,12 @@ func TestLogLevelActiveInactive(t *testing.T){
 	Debugf("x")
 	Info("name=", "elvis")
 	Infof("name=%s", "elvis")
+	Errorf("error=%s", "error1")
 
-	expected := ""
-	if actual := buff.String(); actual != expected {
-		t.Errorf("log format not expected, expected=%s, actual=%s", expected, actual)
+	actual := buff.String()
+	index := strings.Index(actual, "ERROR")
+	if index != 0 {
+		t.Errorf("log format not expected, actual=%s, index=%d", actual, index)
 	}
 	// resetting to default
 	logger.SetLevel(DEBUG)
